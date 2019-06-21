@@ -1,9 +1,16 @@
-div {
- 
+.map-wrap {
+  position: relative;
+  max-width: 103rem;
+
+  max-height: 39.5rem;
 }
-
-
-
+.App {
+  background: linear-gradient(39.08deg, #e5497d 0%, #555beb 100%), #c4c4c4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 40vmin;
