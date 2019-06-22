@@ -1,15 +1,19 @@
 .map-wrap {
   position: relative;
   max-width: 103rem;
-
+  width: 100%;
+  height: 100vh;
   max-height: 39.5rem;
+  border-radius: 30px;
 }
 .App {
+  height: 100%;
   background: linear-gradient(39.08deg, #e5497d 0%, #555beb 100%), #c4c4c4;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 1rem;
 }
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
@@ -19,7 +23,7 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+
   display: flex;
   flex-direction: column;
   align-items: center;

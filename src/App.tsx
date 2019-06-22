@@ -87,27 +87,26 @@ class App extends React.Component<AppProps, AppState> {
     const url = `${this.state.prefix}300x500${this.state.suffix}`;
     return (
       <div className="App">
-        <img src={url} />
-        <section
-          style={{ width: "100%", height: `38rem` }}
-          className="map-wrap"
-        >
-          <div style={{ height: "39vh", width: "100%;" }} className="map">
-            <Map
-              center={{ lat: 58.38545402237506, lng: 26.359866734165085 }}
-              zoom={13}
-              places={this.state.venues}
-              googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiqvVWt3WbgB72f4Nx30eL-2Ls0J9oxvM"
-              loadingElement={<div style={{ width: "100%", height: `100%` }} />}
-              containerElement={
-                <div style={{ width: "100%", height: `38rem` }} />
-              }
-              mapElement={<div style={{ width: "100%", height: `100%` }} />}
-            />
-            ,
-          </div>
+        <header>
+          <h1>Venues</h1>
+        </header>
+
+        <section className="map-wrap">
+          <Map
+            center={{ lat: 58.38545402237506, lng: 26.359866734165085 }}
+            zoom={13}
+            places={this.state.venues}
+            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiqvVWt3WbgB72f4Nx30eL-2Ls0J9oxvM"
+            loadingElement={<div style={{ width: "100%", height: `100%` }} />}
+            containerElement={<div style={{ width: "100%", height: `100%` }} />}
+            mapElement={
+              <div
+                style={{ borderRadius: "5px", width: "100%", height: `100%` }}
+              />
+            }
+          />
+          ,
         </section>
-        {this.handleVenues()}
       </div>
     );
   }
