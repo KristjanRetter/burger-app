@@ -1,0 +1,26 @@
+@import "../../sass/variables";
+
+.venue-images {
+  display: flex;
+  justify-content: center;
+  max-width: 104em;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+
+  &__image {
+    height: 25rem;
+    width: 25rem;
+    margin: 0.5rem;
+    border: 1px solid $border-color;
+    @media (max-width: 900px) {
+      width: 9.5rem;
+      height: 9.5rem;
+    }
+  }
+  .container {
+    flex-wrap: wrap;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}

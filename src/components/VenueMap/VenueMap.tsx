@@ -2,6 +2,7 @@
 import React, { Fragment } from "react";
 import burger from "../../assets/logos/burger.svg";
 import "./VenueMap.scss";
+import { observable, runInAction, action, toJS } from "mobx";
 import {
   withGoogleMap,
   GoogleMap,
@@ -10,35 +11,29 @@ import {
   Circle,
   InfoWindow
 } from "react-google-maps";
+import { inject, observer } from "mobx-react";
 
 export interface VenueMapProps {
   places: any;
   zoom: any;
   center: any;
+  burgerStore?: any;
 }
 
-export interface VenueMapState {}
-
-class VenueMap extends React.Component<VenueMapProps, VenueMapState> {
-  state = {
-    bussStation: { lat: 58.37832, lng: 26.73246 },
-    isOpen: true,
-    venueId: null,
-    prefix: "",
-    suffix: "",
-    images: []
-  };
-  componentWillMount() {
-    this.setState({
-      isOpen: true
-    });
-  }
+@inject("burgerStore")
+@observer
+class VenueMap extends React.PureComponent<VenueMapProps, {}> {
   componentDidMount() {
-    this.setState({
-      isOpen: false
-    });
+    this.props.burgerStore.getVenues();
+    this.props.burgerStore.getVenueId("test");
   }
-  distance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+
+  calculateDistance = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ) => {
     const R = 6371; // Radius of the earth in km
     const dLat = ((lat2 - lat1) * Math.PI) / 180; // deg2rad below
     const dLon = ((lon2 - lon1) * Math.PI) / 180;
@@ -59,35 +54,13 @@ class VenueMap extends React.Component<VenueMapProps, VenueMapState> {
     });
   };
 
-  handleToggleClose = () => {
-    this.setState({
-      isOpen: false
-    });
-  };
-
-  getVenueImages = () => {
-    fetch(
-      `https://api.foursquare.com/v2/venues/${
-        this.state.venueId
-      }/photos/?limit=10&client_id=BFUGT4CB2RB2FATARCVQBYCD1VM0YHXNOY14L03SW21LMURD&client_secret=AL2DICAO3E1BNPG22VHL5PBFUWWL4DWNOUXRSTISRL3UHYWK&v=20131124`
-    )
-      .then(data => data.json())
-      .then(data => {
-        console.log(data);
-
-        if (data.response.photos.items.length > 0) {
-          this.setState({
-            images: data.response.photos.items
-          });
-        }
-      });
-  };
-
   getVenues = () => {
+    const bussStation = { lat: 58.37832, lng: 26.73246 };
+
     return this.props.places.map((place: any) => {
-      const BussStationDistance = this.distance(
-        this.state.bussStation.lat,
-        this.state.bussStation.lng,
+      const BussStationDistance = this.calculateDistance(
+        bussStation.lat,
+        bussStation.lng,
         place.location.lat,
         place.location.lng
       );
@@ -100,19 +73,15 @@ class VenueMap extends React.Component<VenueMapProps, VenueMapState> {
               lat: place.location.lat,
               lng: place.location.lng
             }}
-            onClick={(e: any) => {
+            onClick={() => {
               this.handleToggleOpen();
-              this.setState({
-                venueId: place.id
-              });
-              console.log(this.state.venueId);
-              this.getVenueImages();
+              this.props.burgerStore.getVenueId(place.id);
             }}
             options={{
               animation: 2
             }}
           >
-            {this.state.venueId === place.id && (
+            {this.props.burgerStore.venueID === place.id && (
               <InfoWindow>
                 <h1>{place.name}</h1>
               </InfoWindow>
@@ -124,9 +93,10 @@ class VenueMap extends React.Component<VenueMapProps, VenueMapState> {
   };
 
   render() {
+    const bussStation = { lat: 58.37832, lng: 26.73246 };
+
     return (
       <>
-        {this.state.isOpen ? <p>loading</p> : null}
         <GoogleMap
           defaultZoom={this.props.zoom}
           defaultCenter={{
@@ -141,20 +111,13 @@ class VenueMap extends React.Component<VenueMapProps, VenueMapState> {
         >
           <Circle
             defaultCenter={{
-              lat: this.state.bussStation.lat,
-              lng: this.state.bussStation.lng
+              lat: bussStation.lat,
+              lng: bussStation.lng
             }}
             radius={1000}
           />
           {this.getVenues()}
         </GoogleMap>
-        <br />
-        <section className="burger-images">
-          {this.state.images.map((image: any) => {
-            const url = `${image.prefix}500x500${image.suffix}`;
-            return <img className="burger-images__image" src={url} />;
-          })}
-        </section>
       </>
     );
   }
