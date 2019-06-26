@@ -13,7 +13,12 @@ class VenueImages extends React.PureComponent<VenueImagesProps, {}> {
           {this.props.images.map((image: any) => {
             const url = `${image.prefix}500x500${image.suffix}`;
             return (
-              <img className="venue-images__image" src={image.download_url} />
+              <img
+                alt=""
+                key={image.download_url}
+                className="venue-images__image"
+                src={image.download_url}
+              />
             );
           })}
         </div>

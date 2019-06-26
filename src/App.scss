@@ -2,11 +2,15 @@
 
 .burger-app {
   height: 100%;
-  background: linear-gradient(39.08deg, $gradient-start 0%, $gradient-end 100%);
+  background: linear-gradient(30deg, $gradient-start 0%, $gradient-end 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 2rem;
+  padding-top: 0;
+  @media (max-width: $medium-breakpoint) {
+    background: linear-gradient(0deg, $gradient-start 0%, $gradient-end 100%);
+  }
 
   &__header {
     width: 100%;
@@ -14,6 +18,9 @@
     display: flex;
     justify-content: space-between;
     color: $text-color;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    margin-top: 4rem;
   }
 
   &__loader {
@@ -21,6 +28,7 @@
     display: flex;
     align-items: center;
     font-size: 0.875rem;
+    margin: 0;
     &:after {
       content: ".";
       animation: dots 1s steps(5, end) infinite;
@@ -29,12 +37,17 @@
 
   &__title {
     margin: 0;
+    line-height: 1;
     padding-left: 1rem;
+    @media (max-width: $medium-breakpoint) {
+      padding-left: 0rem;
+    }
   }
 }
 
 .map {
   border: 1px solid $border-color;
+  box-sizing: border-box;
   border-radius: 5px;
   width: 100%;
   height: 100%;
@@ -44,7 +57,11 @@
     max-width: 103rem;
     width: 100%;
     height: 100vh;
-    max-height: 39.5rem;
+    max-height: 49.5rem;
+    margin-bottom: 1.5rem;
+    @media (max-width: $medium-breakpoint) {
+      max-height: 22.5rem;
+    }
   }
 }
 

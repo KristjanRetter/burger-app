@@ -4,17 +4,20 @@
   display: flex;
   justify-content: center;
   max-width: 104em;
-  margin-left: -0.5rem;
-  margin-right: -0.5rem;
+  margin-left: -7px;
+  margin-right: -7px;
+  box-sizing: border-box;
 
   &__image {
     height: 25rem;
     width: 25rem;
     margin: 0.5rem;
+    box-sizing: border-box;
     border: 1px solid $border-color;
-    @media (max-width: 900px) {
+    @media (max-width: $medium-breakpoint) {
       width: 9.5rem;
       height: 9.5rem;
+      margin: 0.3rem;
     }
   }
   .container {

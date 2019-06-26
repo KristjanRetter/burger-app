@@ -1,8 +1,7 @@
 /* global google */
-import React, { Fragment } from "react";
+import React from "react";
 import burger from "../../assets/logos/burger.svg";
 import "./VenueMap.scss";
-import { observable, runInAction, action, toJS } from "mobx";
 import {
   withGoogleMap,
   GoogleMap,
@@ -12,30 +11,26 @@ import {
   InfoWindow
 } from "react-google-maps";
 import { inject, observer } from "mobx-react";
+import { VenueInfoDto } from "../../typings/VenueInfoDto";
 
 export interface VenueMapProps {
-  places: any;
-  zoom: any;
-  center: any;
+  venues: VenueInfoDto[];
+  zoom: number;
+  center: { lat: number; lng: number };
   burgerStore?: any;
 }
 
 @inject("burgerStore")
 @observer
 class VenueMap extends React.PureComponent<VenueMapProps, {}> {
-  componentDidMount() {
-    this.props.burgerStore.getVenues();
-    this.props.burgerStore.getVenueId("test");
-  }
-
   calculateDistance = (
     lat1: number,
     lon1: number,
     lat2: number,
     lon2: number
   ) => {
-    const R = 6371; // Radius of the earth in km
-    const dLat = ((lat2 - lat1) * Math.PI) / 180; // deg2rad below
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
     const dLon = ((lon2 - lon1) * Math.PI) / 180;
     const a =
       0.5 -
@@ -57,14 +52,14 @@ class VenueMap extends React.PureComponent<VenueMapProps, {}> {
   getVenues = () => {
     const bussStation = { lat: 58.37832, lng: 26.73246 };
 
-    return this.props.places.map((place: any) => {
+    return this.props.venues.map((place: VenueInfoDto) => {
       const BussStationDistance = this.calculateDistance(
         bussStation.lat,
         bussStation.lng,
         place.location.lat,
         place.location.lng
       );
-      if (BussStationDistance > 1) {
+      if (BussStationDistance > 1 && BussStationDistance < 10) {
         return (
           <Marker
             key={place.id}
@@ -88,13 +83,13 @@ class VenueMap extends React.PureComponent<VenueMapProps, {}> {
             )}
           </Marker>
         );
+      } else {
+        return null;
       }
     });
   };
 
   render() {
-    const bussStation = { lat: 58.37832, lng: 26.73246 };
-
     return (
       <>
         <GoogleMap
@@ -105,14 +100,13 @@ class VenueMap extends React.PureComponent<VenueMapProps, {}> {
           }}
           options={{
             disableDefaultUI: true,
-            streetViewControl: false,
-            minZoom: 13
+            streetViewControl: false
           }}
         >
           <Circle
             defaultCenter={{
-              lat: bussStation.lat,
-              lng: bussStation.lng
+              lat: 58.37832,
+              lng: 26.73246
             }}
             radius={1000}
           />

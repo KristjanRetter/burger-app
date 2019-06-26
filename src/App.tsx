@@ -1,71 +1,113 @@
 import React from "react";
 import "./App.scss";
-import { Provider } from "mobx-react";
-import { RootStore } from "./common/stores/rootStore";
+import { observer, inject } from "mobx-react";
 import VenueImages from "./components/VenueImages/VenueImages";
+import Map from "./components/VenueMap/VenueMap";
+import { VenueInfoDto } from "./typings/VenueInfoDto";
 
-const rootStore = new RootStore();
+const FOURSQUARE_API_KEY_SECRET =
+  process.env.REACT_APP_FOURSQUARE_API_KEY_SECRET;
+const FOURSQUARE_API_KEY_ID = process.env.REACT_APP_FOURSQUARE_API_KEY_ID;
+const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 
-export interface AppProps {}
+export interface AppProps {
+  burgerStore?: any;
+}
 
 export interface AppState {
-  venues: any;
-  images: any;
+  venues: VenueInfoDto[];
+  images: [];
+  width: number;
+  loadingData: boolean;
 }
-var foursquare = require("react-foursquare")({
-  clientID: "BFUGT4CB2RB2FATARCVQBYCD1VM0YHXNOY14L03SW21LMURD",
-  clientSecret: "A31S0V2WI5YEYKNZRO5KY5ARCED4BIN4GKXZWEFM2DFIE5V1"
-});
 
+@inject("burgerStore")
+@observer
 export default class App extends React.Component<AppProps, AppState> {
-  constructor(props: any) {
+  constructor(props: AppProps) {
     super(props);
     this.state = {
-      venues: [],
-      images: []
+      loadingData: true,
+      images: [],
+      width: 0,
+      venues: []
     };
   }
 
   componentDidMount() {
-    fetch("https://picsum.photos/v2/list?page=2&limit=3")
-      .then(data => data.json())
-      .then(data =>
-        this.setState({
-          images: data
-        })
-      );
+    window.addEventListener(
+      "resize",
+      (e: Event) => {
+        e.preventDefault();
+        this.resize.bind(this);
+      },
+      { passive: false }
+    );
+    this.resize();
 
     fetch(
-      "https://api.foursquare.com/v2/venues/search/?categoryId=4bf58dd8d48988d16c941735&near=Tartu&client_id=BFUGT4CB2RB2FATARCVQBYCD1VM0YHXNOY14L03SW21LMURD&client_secret=4KQ23LZ1SKPWNSOS5EOGFBUUVPUNHDCXK2FKEOJJZ3OPQ3PU"
+      `https://api.foursquare.com/v2/venues/search/?categoryId=4bf58dd8d48988d16c941735&near=Tartu&client_id=${FOURSQUARE_API_KEY_ID}&client_secret=${FOURSQUARE_API_KEY_SECRET}&v=20190626`
     )
       .then(data => data.json())
       .then(data => {
         this.setState({
-          venues: data.response.venues
+          venues: data.response.venues,
+          loadingData: false
         });
       });
   }
 
+  /*getVenues = () => {
+    if (this.props.burgerStore.venueID) {
+      fetch(
+        `https://api.foursquare.com/v2/venues/${
+          this.props.burgerStore.venueID
+        }/photos?client_id=${FOURSQUARE_API_KEY_ID}&client_secret=${FOURSQUARE_API_KEY_SECRET}&v=20190626`
+      )
+        .then(data => data.json())
+        .then(data =>
+          this.setState({
+          images: data.response.photos.items
+        })
+          
+        );
+    }
+  };*/
+
+  resize() {
+    this.setState({ width: window.innerWidth });
+  }
+
+  handleZoom = () => {
+    if (this.state.width <= 900) {
+      return 12.5;
+    } else {
+      return 13;
+    }
+  };
+
   render() {
+    /*this.getVenues();*/
+
     return (
-      <Provider {...rootStore}>
-        <div className="burger-app">
-          <header className="burger-app__header">
-            <h1 className="burger-app__title">Venues</h1>
+      <div className="burger-app">
+        <header className="burger-app__header">
+          <h1 className="burger-app__title">Venues</h1>
+          {this.state.loadingData && (
             <p className="burger-app__loader">Gathering data</p>
-          </header>
-          {/*   <Map
-            center={{ lat: 58.38545402237506, lng: 26.359866734165085 }}
-            zoom={13}
-            places={this.state.venues}
-            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiqvVWt3WbgB72f4Nx30eL-2Ls0J9oxvM"
-            loadingElement={<p />}
-            containerElement={<div className="map__container" />}
-            mapElement={<div className="map" />}
-      />*/}
-          <VenueImages images={this.state.images} />
-        </div>
-      </Provider>
+          )}
+        </header>
+        <Map
+          center={{ lat: 58.38545402237506, lng: 26.359866734165085 }}
+          zoom={this.handleZoom()}
+          venues={this.state.venues}
+          googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}`}
+          loadingElement={<p />}
+          containerElement={<div className="map__container" />}
+          mapElement={<div className="map" />}
+        />
+        <VenueImages images={this.state.images} />
+      </div>
     );
   }
 }

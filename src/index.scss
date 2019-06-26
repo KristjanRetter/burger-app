@@ -1,11 +1,13 @@
+@import "./sass/variables";
 html {
   height: 100%;
 }
 
 body {
   height: 100%;
-  background: linear-gradient(39.08deg, #e5497d 0%, #555beb 100%), #c4c4c4;
   margin: 0;
+  padding: 0;
+  background-color: $gradient-start;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
