@@ -1,6 +1,11 @@
 import { observable, action } from "mobx";
 
-export default class BurgerStore {
+interface BurgerStoreTypes {
+  venueID: string;
+  getVenueId(id: string): void;
+}
+
+export default class BurgerStore implements BurgerStoreTypes {
   @observable
   public venueID: string = "";
 

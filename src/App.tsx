@@ -4,6 +4,7 @@ import { observer, inject } from "mobx-react";
 import VenueImages from "./components/VenueImages/VenueImages";
 import Map from "./components/VenueMap/VenueMap";
 import { VenueInfoDto } from "./typings/VenueInfoDto";
+import BurgerStore from "./common/stores/burgerStore";
 
 const FOURSQUARE_API_KEY_SECRET =
   process.env.REACT_APP_FOURSQUARE_API_KEY_SECRET;
@@ -11,7 +12,7 @@ const FOURSQUARE_API_KEY_ID = process.env.REACT_APP_FOURSQUARE_API_KEY_ID;
 const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 
 export interface AppProps {
-  burgerStore?: any;
+  burgerStore?: BurgerStore;
 }
 
 export interface AppState {
@@ -35,14 +36,7 @@ export default class App extends React.Component<AppProps, AppState> {
   }
 
   componentDidMount() {
-    window.addEventListener(
-      "resize",
-      (e: Event) => {
-        e.preventDefault();
-        this.resize.bind(this);
-      },
-      { passive: false }
-    );
+    window.addEventListener("resize", this.resize.bind(this));
     this.resize();
 
     fetch(
@@ -87,6 +81,7 @@ export default class App extends React.Component<AppProps, AppState> {
   };
 
   render() {
+    console.log(this.props.burgerStore!.venueID);
     /*this.getVenues();*/
 
     return (

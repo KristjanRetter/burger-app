@@ -1,7 +1,6 @@
 /* global google */
 import React from "react";
 import burger from "../../assets/logos/burger.svg";
-import "./VenueMap.scss";
 import {
   withGoogleMap,
   GoogleMap,
@@ -12,12 +11,13 @@ import {
 } from "react-google-maps";
 import { inject, observer } from "mobx-react";
 import { VenueInfoDto } from "../../typings/VenueInfoDto";
+import BurgerStore from "../../common/stores/burgerStore";
 
 export interface VenueMapProps {
   venues: VenueInfoDto[];
   zoom: number;
   center: { lat: number; lng: number };
-  burgerStore?: any;
+  burgerStore?: BurgerStore;
 }
 
 @inject("burgerStore")
@@ -70,13 +70,13 @@ class VenueMap extends React.PureComponent<VenueMapProps, {}> {
             }}
             onClick={() => {
               this.handleToggleOpen();
-              this.props.burgerStore.getVenueId(place.id);
+              this.props.burgerStore!.getVenueId(place.id);
             }}
             options={{
               animation: 2
             }}
           >
-            {this.props.burgerStore.venueID === place.id && (
+            {this.props.burgerStore!.venueID === place.id && (
               <InfoWindow>
                 <h1>{place.name}</h1>
               </InfoWindow>
