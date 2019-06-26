@@ -72,9 +72,6 @@ class VenueMap extends React.PureComponent<VenueMapProps, {}> {
               this.handleToggleOpen();
               this.props.burgerStore!.getVenueId(place.id);
             }}
-            options={{
-              animation: 2
-            }}
           >
             {this.props.burgerStore!.venueID === place.id && (
               <InfoWindow>
