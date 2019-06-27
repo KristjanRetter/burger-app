@@ -1,14 +1,10 @@
 import React from "react";
 import "./App.scss";
-import { observer, inject } from "mobx-react";
 import VenueImages from "./components/VenueImages/VenueImages";
 import Map from "./components/VenueMap/VenueMap";
-import { VenueInfoDto } from "./typings/VenueInfoDto";
 import BurgerStore from "./common/stores/burgerStore";
+import BurgerHeader from "./components/BurgerHeader/BurgerHeader";
 
-const FOURSQUARE_API_KEY_SECRET =
-  process.env.REACT_APP_FOURSQUARE_API_KEY_SECRET;
-const FOURSQUARE_API_KEY_ID = process.env.REACT_APP_FOURSQUARE_API_KEY_ID;
 const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 
 export interface AppProps {
@@ -16,59 +12,23 @@ export interface AppProps {
 }
 
 export interface AppState {
-  venues: VenueInfoDto[];
-  images: [];
   width: number;
-  loadingData: boolean;
 }
 
-@inject("burgerStore")
-@observer
 export default class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props);
     this.state = {
-      loadingData: true,
-      images: [],
-      width: 0,
-      venues: []
+      width: 0
     };
   }
 
   componentDidMount() {
-    window.addEventListener("resize", this.resize.bind(this));
-    this.resize();
-
-    fetch(
-      `https://api.foursquare.com/v2/venues/search/?categoryId=4bf58dd8d48988d16c941735&near=Tartu&client_id=${FOURSQUARE_API_KEY_ID}&client_secret=${FOURSQUARE_API_KEY_SECRET}&v=20190626`
-    )
-      .then(data => data.json())
-      .then(data => {
-        this.setState({
-          venues: data.response.venues,
-          loadingData: false
-        });
-      });
+    window.addEventListener("resize", this.handleResize.bind(this));
+    this.handleResize();
   }
 
-  /*getVenues = () => {
-    if (this.props.burgerStore.venueID) {
-      fetch(
-        `https://api.foursquare.com/v2/venues/${
-          this.props.burgerStore.venueID
-        }/photos?client_id=${FOURSQUARE_API_KEY_ID}&client_secret=${FOURSQUARE_API_KEY_SECRET}&v=20190626`
-      )
-        .then(data => data.json())
-        .then(data =>
-          this.setState({
-          images: data.response.photos.items
-        })
-          
-        );
-    }
-  };*/
-
-  resize() {
+  handleResize() {
     this.setState({ width: window.innerWidth });
   }
 
@@ -81,27 +41,18 @@ export default class App extends React.Component<AppProps, AppState> {
   };
 
   render() {
-    console.log(this.props.burgerStore!.venueID);
-    /*this.getVenues();*/
-
     return (
       <div className="burger-app">
-        <header className="burger-app__header">
-          <h1 className="burger-app__title">Venues</h1>
-          {this.state.loadingData && (
-            <p className="burger-app__loader">Gathering data</p>
-          )}
-        </header>
+        <BurgerHeader />
         <Map
           center={{ lat: 58.38545402237506, lng: 26.359866734165085 }}
           zoom={this.handleZoom()}
-          venues={this.state.venues}
           googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}`}
           loadingElement={<p />}
           containerElement={<div className="map__container" />}
           mapElement={<div className="map" />}
         />
-        <VenueImages images={this.state.images} />
+        <VenueImages />
       </div>
     );
   }

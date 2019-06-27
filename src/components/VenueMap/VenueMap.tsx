@@ -14,7 +14,6 @@ import { VenueInfoDto } from "../../typings/VenueInfoDto";
 import BurgerStore from "../../common/stores/burgerStore";
 
 export interface VenueMapProps {
-  venues: VenueInfoDto[];
   zoom: number;
   center: { lat: number; lng: number };
   burgerStore?: BurgerStore;
@@ -23,6 +22,10 @@ export interface VenueMapProps {
 @inject("burgerStore")
 @observer
 class VenueMap extends React.PureComponent<VenueMapProps, {}> {
+  componentDidMount() {
+    this.props.burgerStore!.getVenueInfo();
+  }
+
   calculateDistance = (
     lat1: number,
     lon1: number,
@@ -52,7 +55,7 @@ class VenueMap extends React.PureComponent<VenueMapProps, {}> {
   getVenues = () => {
     const bussStation = { lat: 58.37832, lng: 26.73246 };
 
-    return this.props.venues.map((place: VenueInfoDto) => {
+    return this.props.burgerStore!.venues.map((place: VenueInfoDto) => {
       const BussStationDistance = this.calculateDistance(
         bussStation.lat,
         bussStation.lng,
@@ -71,6 +74,7 @@ class VenueMap extends React.PureComponent<VenueMapProps, {}> {
             onClick={() => {
               this.handleToggleOpen();
               this.props.burgerStore!.getVenueId(place.id);
+              this.props.burgerStore!.getVenueImages();
             }}
           >
             {this.props.burgerStore!.venueID === place.id && (

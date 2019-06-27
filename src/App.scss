@@ -11,38 +11,6 @@
   @media (max-width: $medium-breakpoint) {
     background: linear-gradient(0deg, $gradient-start 0%, $gradient-end 100%);
   }
-
-  &__header {
-    width: 100%;
-    max-width: 104rem;
-    display: flex;
-    justify-content: space-between;
-    color: $text-color;
-    align-items: flex-end;
-    margin-bottom: 2rem;
-    margin-top: 4rem;
-  }
-
-  &__loader {
-    padding-right: 1rem;
-    display: flex;
-    align-items: center;
-    font-size: 0.875rem;
-    margin: 0;
-    &:after {
-      content: ".";
-      animation: dots 1s steps(5, end) infinite;
-    }
-  }
-
-  &__title {
-    margin: 0;
-    line-height: 1;
-    padding-left: 1rem;
-    @media (max-width: $medium-breakpoint) {
-      padding-left: 0rem;
-    }
-  }
 }
 
 .map {
