@@ -46,12 +46,6 @@ class VenueMap extends React.PureComponent<VenueMapProps, {}> {
     return R * 2 * Math.asin(Math.sqrt(a));
   };
 
-  handleToggleOpen = () => {
-    this.setState({
-      isOpen: true
-    });
-  };
-
   getVenues = () => {
     const bussStation = { lat: 58.37832, lng: 26.73246 };
 
@@ -72,13 +66,16 @@ class VenueMap extends React.PureComponent<VenueMapProps, {}> {
               lng: place.location.lng
             }}
             onClick={() => {
-              this.handleToggleOpen();
-              this.props.burgerStore!.getVenueId(place.id);
+              this.props.burgerStore!.setVenueId(place.id);
               this.props.burgerStore!.getVenueImages();
             }}
           >
             {this.props.burgerStore!.venueID === place.id && (
-              <InfoWindow>
+              <InfoWindow
+                onCloseClick={() => {
+                  this.props.burgerStore!.setVenueId("");
+                }}
+              >
                 <h1>{place.name}</h1>
               </InfoWindow>
             )}

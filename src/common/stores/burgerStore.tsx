@@ -30,7 +30,6 @@ export default class BurgerStore {
       });
   };
 
-  
   public getVenueImages = () => {
     this.isLoading = true;
     if (this.venueID) {
@@ -53,7 +52,7 @@ export default class BurgerStore {
   };
 
   @action
-  public getVenueId(id: string) {
+  public setVenueId(id: string) {
     this.venueID = id;
   }
 }
