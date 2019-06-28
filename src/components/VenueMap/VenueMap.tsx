@@ -102,6 +102,9 @@ class VenueMap extends React.PureComponent<VenueMapProps, {}> {
           }}
         >
           <Circle
+            options={{
+              clickable: false
+            }}
             defaultCenter={{
               lat: 58.37832,
               lng: 26.73246

@@ -40,7 +40,6 @@ export default class BurgerStore {
       )
         .then(data => data.json())
         .then(data => {
-          console.log(data);
           this.isLoading = false;
           try {
             this.images = data.response.photos.items;
