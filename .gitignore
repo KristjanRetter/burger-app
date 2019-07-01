@@ -2,7 +2,7 @@
 
 
 # api keys
-#Left .env out of .gitignore on purpose. Grants the ability to run the app locally.
+.env 
 
 # dependencies
 /node_modules
