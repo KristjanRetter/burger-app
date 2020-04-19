@@ -2,9 +2,7 @@
 
 ## Code test
 
-How to run:
-### `npm install`
-### `npm start`
+Code test for Qminder.
 
 
 
