@@ -2,7 +2,7 @@
 
 ## Code test
 
-Code test for Qminder.
+Code test for one of my past front-end developer positions.
 
 
 
